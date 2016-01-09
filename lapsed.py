@@ -13,15 +13,12 @@ scrot_quality = 75
 screenshot_rate = 10
 
 def capture(directory, clear_directory):
-    
     if clear_directory:
         shutil.rmtree(directory, ignore_errors=True)
         os.mkdir(directory)
 
-    print "Screenshotting..."
-    ## Every ten seconds
+    print "Screenshotting every %d seconds..." % screenshot_rate
     beat.set_rate(1.0/screenshot_rate)
-    
     index = 0
     while beat.true():
         try:
@@ -36,7 +33,7 @@ def capture(directory, clear_directory):
         except KeyboardInterrupt:
             print "Encoding..."
             encode(directory)
-            sys.exit(0) 
+            sys.exit(0)
 
 
 def annotate_image(directory, filename, text):
@@ -51,19 +48,18 @@ def annotate_image(directory, filename, text):
 
 def encode(directory):
     subprocess.call(["ffmpeg", "-y",
-		"-r", "10.0",
-		"-f", "image2",
-		"-i", "%s/%%08d.jpg" % directory,
-		"-vcodec", "libx264",
-		"-qscale:v", "5",
-		"-vf", "scale=1024:768",
-		"%s.mp4" % directory])
+                     "-r", "10.0",
+                     "-f", "image2",
+                     "-i", "%s/%%08d.jpg" % directory,
+                     "-vcodec", "libx264",
+                     "-qscale:v", "5",
+                     "-vf", "scale=1024:768",
+                     "%s.mp4" % directory])
 
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
-        capture(sys.argv[1], False)
+        capture(sys.argv[1], True)
     else:
-        print("Usage: lapsed.py [filename]")	
-    
-	
+        print("Usage: lapsed.py [filename]")
+
