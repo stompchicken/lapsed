@@ -1,6 +1,7 @@
 import cronus.beat as beat
 import shutil
 import os
+import os.path
 import subprocess
 import sys
 from datetime import datetime
@@ -12,10 +13,10 @@ timestamp_format = "%H:%M:%S"
 scrot_quality = 75
 screenshot_rate = 10
 
-def capture(directory, clear_directory):
-    if clear_directory:
-        shutil.rmtree(directory, ignore_errors=True)
-        os.mkdir(directory)
+def capture(directory):
+
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
     print "Screenshotting every %d seconds..." % screenshot_rate
     beat.set_rate(1.0/screenshot_rate)
@@ -51,6 +52,8 @@ def encode(directory):
                      "-r", "10.0",
                      "-f", "image2",
                      "-i", "%s/%%08d.jpg" % directory,
+                     "-i", "epicsax.mp3",
+                     "-shortest",
                      "-vcodec", "libx264",
                      "-qscale:v", "5",
                      "-vf", "scale=1024:768",
@@ -59,7 +62,7 @@ def encode(directory):
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
-        capture(sys.argv[1], True)
+        capture(sys.argv[1])
     else:
         print("Usage: lapsed.py [filename]")
 
