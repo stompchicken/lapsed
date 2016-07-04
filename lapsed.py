@@ -52,7 +52,6 @@ def encode(directory):
                      "-r", "10.0",
                      "-f", "image2",
                      "-i", "%s/%%08d.jpg" % directory,
-                     "-i", "epicsax.mp3",
                      "-shortest",
                      "-vcodec", "libx264",
                      "-qscale:v", "5",
